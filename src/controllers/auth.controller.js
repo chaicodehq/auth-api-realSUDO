@@ -84,7 +84,7 @@ export async function login(req, res, next) {
  */
 export async function me(req, res, next) {
 	try {
-		// Your code here
+		res.json({user: req.user});
 	} catch (error) {
 		next(error);
 	}
