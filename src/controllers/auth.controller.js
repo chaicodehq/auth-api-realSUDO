@@ -49,7 +49,28 @@ export async function register(req, res, next) {
  */
 export async function login(req, res, next) {
 	try {
-		// Your code here
+		const { email, password } = req.body;
+
+		// finding the user..
+		const user = await User.findOne({ email }).select("+password");
+
+		const isValid = user && (await bcrypt.compare(password, user.password));
+
+		if (!isValid)
+			return res
+				.status(401)
+				.json({ error: { message: "Invalid credentials" } });
+
+		const token = signToken({
+			userId: user._id,
+			email: user.email,
+			role: user.role,
+		});
+
+		user.password = undefined;
+		
+		res.json({token, user});
+
 	} catch (error) {
 		next(error);
 	}
