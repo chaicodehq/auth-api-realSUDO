@@ -1,4 +1,4 @@
-import { User } from '../models/user.model.js';
+import { User } from "../models/user.model.js";
 
 /**
  * TODO: List all users (Admin only)
@@ -7,11 +7,12 @@ import { User } from '../models/user.model.js';
  * 2. Return 200 with { users }
  */
 export async function listUsers(req, res, next) {
-  try {
-    // Your code here
-  } catch (error) {
-    next(error);
-  }
+	try {
+		const users = await User.find();
+		res.json({ users });
+	} catch (error) {
+		next(error);
+	}
 }
 
 /**
@@ -23,11 +24,18 @@ export async function listUsers(req, res, next) {
  * 4. Return 200 with { user }
  */
 export async function getUser(req, res, next) {
-  try {
-    // Your code here
-  } catch (error) {
-    next(error);
-  }
+	try {
+		// Your code here
+		const id = req.params.id;
+		const user = await User.findById(id);
+
+		if (!user)
+			return res.status(404).json({ error: { message: "User not found" } });
+
+		res.json({ user });
+	} catch (error) {
+		next(error);
+	}
 }
 
 /**
@@ -39,9 +47,16 @@ export async function getUser(req, res, next) {
  * 4. Return 200 with { message: "User deleted successfully" }
  */
 export async function deleteUser(req, res, next) {
-  try {
-    // Your code here
-  } catch (error) {
-    next(error);
-  }
+	try {
+		// Your code here
+		const id = req.params.id;
+		const user = await User.findByIdAndDelete(id);
+		if (!user)
+			return res.status(404).json({ error: { message: "User not found" } });
+		res.json({message : 'User deleted successfully'});
+
+
+	} catch (error) {
+		next(error);
+	}
 }
